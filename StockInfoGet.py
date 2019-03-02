@@ -4,15 +4,13 @@ from urllib import parse
 import http.client
 import json
 
-
-
-
 class StockInfoGet:
     def __init__(self, stockName):
-        self.stockName = parse.quote(stockName)
+        self.stockName = stockName
         self.parseName = parse.quote(stockName)
 
     def getInfo(self):
+        print("Start get stock info: " + self.stockName)
         self.httpConnect()
         self.jsonDecode()
         return self.orgId, self.code, self.name
