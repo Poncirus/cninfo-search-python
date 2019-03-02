@@ -4,7 +4,7 @@ from urllib import parse
 import http.client
 import json
 import socket
-
+import os
 
 class PdfListGet:
     def __init__(self, orgId, code, name):
@@ -83,7 +83,8 @@ class PdfListGet:
             self.jsonMessage = data.decode("utf-8")
             return
         except ConnectionResetError:
-            print("注意: Http连接错误，" + self.name + "，" + platename)
+            print("注意: Http连接错误，" + self.name + "，" + platename)  
+            os.system("pause")
         self.jsonMessage = None
 
 

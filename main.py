@@ -19,7 +19,7 @@ for key in keyList:
     keys.append(key)
 
 # 下载根目录  当前路径\download\
-DOWNLOAD_PATH = os.path.dirname(os.path.realpath(__file__)) + "\\Download\\"
+DOWNLOAD_PATH = os.path.dirname(os.path.realpath(__file__)) + "\\download\\"
 if not os.path.exists(DOWNLOAD_PATH):
     os.mkdir(DOWNLOAD_PATH)
 
@@ -38,6 +38,7 @@ for stockName in companyList:
 
     if(stockName != name):
         print("注意： 输入名称为" + stockName + "，检索名称为" + name)
+        os.system("pause")
 
     # 获取pdf链接
     pl = PdfListGet(orgId, code, name)
@@ -49,6 +50,7 @@ for stockName in companyList:
         os.mkdir(fileDownloadPath)
     for info in pdfList:
         url = "http://static.cninfo.com.cn/" + info[0]
-        filename = time.strftime("%Y-%m-%d %H-%M-%S  ", time.localtime(info[1]/1000)) + info[2] + ".pdf"
+        extention = info[0][info[0].rfind('.'):].lower()  #截取文件后缀
+        filename = time.strftime("%Y-%m-%d %H-%M-%S  ", time.localtime(info[1]/1000)) + info[2] + extention
         print("正在下载：" + filename)
         FileDownload(url, fileDownloadPath, filename)
