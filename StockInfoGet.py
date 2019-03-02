@@ -10,7 +10,7 @@ class StockInfoGet:
         self.parseName = parse.quote(stockName)
 
     def getInfo(self):
-        print("Start get stock info: " + self.stockName)
+        print("正在获取股票信息 --- " + self.stockName)
         self.httpConnect()
         self.jsonDecode()
         return self.orgId, self.code, self.name

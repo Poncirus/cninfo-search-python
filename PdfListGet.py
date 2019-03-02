@@ -3,6 +3,7 @@
 from urllib import parse
 import http.client
 import json
+import socket
 
 class PdfListGet:
     def __init__(self, orgId, code, name):
@@ -12,12 +13,13 @@ class PdfListGet:
         self.data = []
 
     def getPdfList(self):
-        print("Start get pdf list: " + self.name + " in ShangHai")
-        self.httpConnect("sse", "shmb")
+        print("正在获取PDF链接 --- " + self.name + " --- 沪市")
+        self.httpConnect("sse", "shmb", "沪市")
         self.jsonDecode()
-        print("Start get pdf list: " + self.name + " in ShenZhen")
-        self.httpConnect("szse", "sz")
+        print("正在获取PDF链接 --- " + self.name + " --- 深市")
+        self.httpConnect("szse", "sz", "深市")
         self.jsonDecode()
+        print("共获取到",len(self.data),"个链接")
         return self.data
 
     def jsonDecode(self):
@@ -32,7 +34,8 @@ class PdfListGet:
 
     # 创建http连接  获取Json字符串
     # ！ 去掉 'accept-encoding': "gzip, deflate", 解除加密
-    def httpConnect(self, column, plate):
+    # ！ 去掉 'content-length' 避免计算长度
+    def httpConnect(self, column, plate, platename):
         conn = http.client.HTTPConnection("www.cninfo.com.cn")
 
         payload = "pageNum=1&pageSize=30&tabName=fulltext&column=" + column + "&stock=" + self.code + "%2C" + self.orgId + "&searchkey=%E9%87%8D%E5%A4%A7%E4%BA%8B%E9%A1%B9%3B&secid=&plate=" + plate + "&category=&trade=&seDate=2000-01-01+~+2099-03-01"
@@ -41,7 +44,6 @@ class PdfListGet:
             'accept': "application/json, text/javascript, */*; q=0.01",
             'accept-language': "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6",
             'connection': "keep-alive",
-            'content-length': "192",
             'host': "www.cninfo.com.cn",
             'origin': "http://www.cninfo.com.cn",
             'referer': "http://www.cninfo.com.cn/new/disclosure/stock?orgId=" + self.orgId + "&stockCode=" + self.code,
@@ -56,8 +58,9 @@ class PdfListGet:
             res = conn.getresponse()
             data = res.read()
             self.jsonMessage = data.decode("utf-8")
+            return
         except ConnectionResetError:
-            print("ConnectionResetError: " + self.name +", " + column)
-            self.jsonMessage = None
+            print("注意: Http连接错误，" + self.name + "，" + platename)
+        self.jsonMessage = None
 
         
