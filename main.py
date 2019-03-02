@@ -18,6 +18,17 @@ for key in keyList:
         break
     keys.append(key)
 
+# 禁用关键字  当前路径\banword_list.txt
+COMPANY_CONFIG_FILE = os.path.dirname(os.path.realpath(__file__)) + "\\banword_list.txt"
+banFile = open(COMPANY_CONFIG_FILE)
+banList = banFile.readlines()
+bans = []
+for ban in banList:
+    ban = ban.rstrip('\n')  # 去除右边的换行符
+    if(ban == ""):
+        break
+    bans.append(ban)
+
 # 下载根目录  当前路径\download\
 DOWNLOAD_PATH = os.path.dirname(os.path.realpath(__file__)) + "\\download\\"
 if not os.path.exists(DOWNLOAD_PATH):
@@ -47,7 +58,7 @@ for stockName in companyList:
 
     # 获取pdf链接
     pl = PdfListGet(orgId, code, name)
-    pdfList = pl.getPdfList(keys)
+    pdfList = pl.getPdfList(keys, bans)
 
     # 下载pdf
     fileDownloadPath = DOWNLOAD_PATH + time.strftime("%Y-%m-%d %H-%M-%S  ", time.localtime(time.time())) + name +"\\"

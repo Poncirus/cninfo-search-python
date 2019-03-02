@@ -13,29 +13,37 @@ class PdfListGet:
         self.name = name
         self.data = []
 
-    def getPdfList(self, keylist):
+    def getPdfList(self, keylist, ban = []):
         for key in keylist:
-            self.getPdfListByKey(key)
+            self.getPdfListByKey(key, ban)
         
         print("共获取到", len(self.data), "个链接")
         return self.data
 
-    def getPdfListByKey(self, key):
+    def getPdfListByKey(self, key, ban):
         print("正在搜索PDF链接 --- " + self.name + " --- " + key)
         print("正在获取PDF链接 --- " + self.name + " --- 沪市")
         self.httpConnect("sse", "shmb", "沪市", key)
-        self.jsonDecode()
+        self.jsonDecode(ban)
         print("正在获取PDF链接 --- " + self.name + " --- 深市")
         self.httpConnect("szse", "sz", "深市", key)
-        self.jsonDecode()
+        self.jsonDecode(ban)
 
-    def jsonDecode(self):
+    def jsonDecode(self, ban):
         if self.jsonMessage != None:
             data = json.loads(self.jsonMessage)
             if data["totalAnnouncement"] > 50:
                 print("Warning: 总搜索数大于50，未下载完全")
             announ = data["announcements"]
             for a in announ:
+                title = a["announcementTitle"]
+                isBan = False
+                for b in ban:
+                    if title.find(b) != -1:
+                        isBan = True  # 查找到禁用字符串
+                        break
+                if isBan:
+                    continue    # 跳过该文件
                 info = []
                 info.append(a["adjunctUrl"])
                 info.append(a["announcementTime"])
