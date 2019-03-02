@@ -26,12 +26,12 @@ class StockInfoGet:
     def httpConnect(self):
         conn = http.client.HTTPConnection("www.cninfo.com.cn")
 
-        payload = "keyWord=" + self.parseName + "&maxNum=11"
+        
+        payload = "keyWord=" + self.parseName.lower() + "&maxNum=11"  # 英文字符转换为小写
 
         headers = {
             'host': "www.cninfo.com.cn",
             'connection': "keep-alive",
-            'content-length': "54",
             'accept': "application/json, text/javascript, */*; q=0.01",
             'origin': "http://www.cninfo.com.cn",
             'x-requested-with': "XMLHttpRequest",
@@ -49,4 +49,3 @@ class StockInfoGet:
         data = res.read()
         self.jsonMessage = data.decode("utf-8")
 
-        
