@@ -36,6 +36,11 @@ for stockName in companyList:
     si = StockInfoGet(stockName)
     orgId, code, name = si.getInfo()
 
+    if(orgId == None):
+        print("注意： 没有检索到" + stockName + "的信息")
+        os.system("pause")
+        continue
+
     if(stockName != name):
         print("注意： 输入名称为" + stockName + "，检索名称为" + name)
         os.system("pause")

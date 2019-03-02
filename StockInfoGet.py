@@ -13,10 +13,15 @@ class StockInfoGet:
         print("正在获取股票信息 --- " + self.stockName)
         self.httpConnect()
         self.jsonDecode()
+        if(self.orgId == None):
+            return None, None, None
         return self.orgId, self.code, self.name
 
     def jsonDecode(self):
         data = json.loads(self.jsonMessage)
+        if(len(data) == 0):
+            self.orgId = None
+            return
         self.orgId = data[0]['orgId']
         self.code = data[0]['code']
         self.name = data[0]['zwjc']
